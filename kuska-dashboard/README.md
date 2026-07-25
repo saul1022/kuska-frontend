@@ -1,23 +1,37 @@
 # Kuska Dashboard — Centro de Mando Web Post-Sismo
 
-Este subproyecto contiene el **Dashboard Web de Kuska**, desarrollado con **Next.js 16**, **TypeScript** y **Leaflet**.
+Dashboard de Next.js y Leaflet para visualizar los reportes creados desde Kuska Mobile. Consume
+Kuska API, muestra la evaluación de Gemma y actualiza los incidentes cada 15 segundos.
 
-## 🌟 Características
-- **Mapa Georreferenciado:** Pines de colores por prioridad (🔴 Alta, 🟡 Media, 🟢 Baja) sobre OpenStreetMap.
-- **Análisis Gemma 4 Multimodal:** Muestra la evaluación estructurada generada por IA (tipo de daño, severidad, riesgos secundarios y explicación en lenguaje natural).
-- **Lista con Filtros:** Orden por urgencia, búsqueda por zona y selector rápido.
-- **Validación Humana:** Botones para confirmación del operador de emergencia.
+## Funcionalidades
 
-## 🚀 Inicio Rápido
+- Mapa georreferenciado con prioridad alta, media y baja.
+- Lista, búsqueda y filtros de incidentes.
+- Detalle de evidencia y análisis multimodal de Gemma.
+- Sincronización automática con FastAPI.
+
+## Desarrollo local
+
+Crear `.env.local` a partir de `.env.example`:
+
+```env
+KUSKA_API_URL=http://127.0.0.1:8000
+```
 
 ```bash
 npm install
 npm run dev
 ```
 
-Abrir en navegador: [http://localhost:3000](http://localhost:3000)
+Abrir [http://localhost:3000](http://localhost:3000).
 
-## 🌐 Deploy en Vercel
-```bash
-npx vercel --prod
+## Despliegue en Vercel
+
+Configurar la variable servidor en Vercel:
+
+```env
+KUSKA_API_URL=https://kuska-lixb.onrender.com
 ```
+
+Next.js utiliza `/api/incidents` como proxy hacia FastAPI, evitando exponer credenciales o
+direcciones privadas en el navegador.

@@ -18,6 +18,7 @@ export interface GemmaResult {
   secondary_risks: string[];
   priority: Priority;
   explanation: string;
+  confidence?: number;
 }
 
 export interface Incident {
@@ -31,7 +32,7 @@ export interface Incident {
   video_url?: string;
   priority: Priority;
   type: IncidentType;
-  status: 'processing' | 'needs_review' | 'validated';
+  status: 'processing' | 'needs_review' | 'validated' | 'processing_failed';
   created_at: string;
   thumbnail_url: string;
   gemma_result?: GemmaResult;
