@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -78,8 +79,9 @@ function seedIfEmpty() {
 export default function App() {
   const [reports, setReports] = useState([]);
   const [dbReady, setDbReady] = useState(false);
+  const [initError, setInitError] = useState(null);
 
-  const [fontsLoaded] = useHankenGrotesk({
+  const [fontsLoaded, fontsError] = useHankenGrotesk({
     HankenGrotesk_400Regular,
     HankenGrotesk_600SemiBold,
     HankenGrotesk_700Bold,
@@ -91,10 +93,16 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    initDb();
-    seedIfEmpty();
-    reloadReports();
-    setDbReady(true);
+    try {
+      initDb();
+      seedIfEmpty();
+      reloadReports();
+    } catch (e) {
+      console.error('Error inicializando la base de datos local:', e);
+      setInitError(e?.message ?? String(e));
+    } finally {
+      setDbReady(true);
+    }
   }, [reloadReports]);
 
   useNetworkSync(reloadReports);
@@ -174,13 +182,26 @@ export default function App() {
   );
 
   const onReady = useCallback(async () => {
-    if (fontsLoaded && dbReady) {
+    if ((fontsLoaded || fontsError) && dbReady) {
       await SplashScreen.hideAsync();
     }
-  }, [fontsLoaded, dbReady]);
+  }, [fontsLoaded, fontsError, dbReady]);
 
-  if (!fontsLoaded || !dbReady) {
+  if (!fontsLoaded && !fontsError) {
     return null;
+  }
+
+  if (!dbReady) {
+    return null;
+  }
+
+  if (initError) {
+    return (
+      <View style={styles.errorScreen}>
+        <Text style={styles.errorTitle}>No se pudo iniciar la app</Text>
+        <Text style={styles.errorBody}>{initError}</Text>
+      </View>
+    );
   }
 
   return (
@@ -200,3 +221,25 @@ export default function App() {
     </NavigationContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  errorScreen: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 24,
+    backgroundColor: '#fcf8f8',
+    gap: 12,
+  },
+  errorTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#ba1a1a',
+    textAlign: 'center',
+  },
+  errorBody: {
+    fontSize: 14,
+    color: '#44474a',
+    textAlign: 'center',
+  },
+});
