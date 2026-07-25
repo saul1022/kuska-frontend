@@ -34,6 +34,35 @@ export default function Home() {
     return () => window.clearInterval(intervalId);
   }, [refreshIncidents]);
 
+  useEffect(() => {
+    if (!isDetailOpen || !selectedIncident || !['pending', 'processing'].includes(selectedIncident.status)) {
+      return;
+    }
+
+    let cancelled = false;
+    const refreshDetail = async () => {
+      try {
+        const detail = await getIncident(selectedIncident.id);
+        if (!cancelled) {
+          setSelectedIncident(detail);
+          setIncidents((current) => current.map((item) => (item.id === detail.id ? detail : item)));
+          setError(null);
+        }
+      } catch (requestError) {
+        if (!cancelled) {
+          setError(requestError instanceof Error ? requestError.message : 'No se pudo actualizar el análisis');
+        }
+      }
+    };
+
+    void refreshDetail();
+    const intervalId = window.setInterval(() => void refreshDetail(), 3_000);
+    return () => {
+      cancelled = true;
+      window.clearInterval(intervalId);
+    };
+  }, [isDetailOpen, selectedIncident?.id, selectedIncident?.status]);
+
   const handleSelectIncident = async (incident: Incident) => {
     setSelectedIncident(incident);
     setIsDetailOpen(true);
