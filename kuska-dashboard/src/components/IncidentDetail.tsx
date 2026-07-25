@@ -266,16 +266,18 @@ export const IncidentDetail: React.FC<IncidentDetailProps> = ({
                 >
                   Cerrar
                 </button>
-                <button
-                  onClick={() => {
-                    if (onValidate) onValidate(incident.id);
-                    onClose();
-                  }}
-                  className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-xs font-bold text-white shadow-lg shadow-emerald-600/30 flex items-center gap-1.5 transition"
-                >
-                  <CheckCircle className="w-4 h-4" />
-                  Validar Incidente
-                </button>
+                {onValidate && (
+                  <button
+                    onClick={() => {
+                      onValidate(incident.id);
+                      onClose();
+                    }}
+                    className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-xs font-bold text-white shadow-lg shadow-emerald-600/30 flex items-center gap-1.5 transition"
+                  >
+                    <CheckCircle className="w-4 h-4" />
+                    Validar Incidente
+                  </button>
+                )}
               </div>
             </div>
           </div>

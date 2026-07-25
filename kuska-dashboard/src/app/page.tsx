@@ -1,28 +1,48 @@
 'use client';
 
-import React, { useState } from 'react';
-import { MOCK_INCIDENTS } from '../data/mockIncidents';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Incident } from '../types/incident';
 import { Navbar } from '../components/Navbar';
 import { MapComponent } from '../components/MapComponent';
 import { IncidentList } from '../components/IncidentList';
 import { IncidentDetail } from '../components/IncidentDetail';
-import { Activity, Radio, Info } from 'lucide-react';
+import { Radio, Info } from 'lucide-react';
+import { getIncident, listIncidents } from '../lib/incidentsApi';
 
 export default function Home() {
-  const [incidents, setIncidents] = useState<Incident[]>(MOCK_INCIDENTS);
+  const [incidents, setIncidents] = useState<Incident[]>([]);
   const [selectedIncident, setSelectedIncident] = useState<Incident | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSelectIncident = (incident: Incident) => {
+  const refreshIncidents = useCallback(async () => {
+    try {
+      const data = await listIncidents();
+      setIncidents(data);
+      setError(null);
+    } catch (requestError) {
+      setError(requestError instanceof Error ? requestError.message : 'No se pudo consultar el backend');
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    void refreshIncidents();
+    const intervalId = window.setInterval(() => void refreshIncidents(), 15_000);
+    return () => window.clearInterval(intervalId);
+  }, [refreshIncidents]);
+
+  const handleSelectIncident = async (incident: Incident) => {
     setSelectedIncident(incident);
     setIsDetailOpen(true);
-  };
-
-  const handleValidateIncident = (id: string) => {
-    setIncidents((prev) =>
-      prev.map((inc) => (inc.id === id ? { ...inc, status: 'validated' } : inc))
-    );
+    try {
+      setSelectedIncident(await getIncident(incident.id));
+      setError(null);
+    } catch (requestError) {
+      setError(requestError instanceof Error ? requestError.message : 'No se pudo cargar el detalle');
+    }
   };
 
   const highPriorityCount = incidents.filter((i) => i.priority === 'alta').length;
@@ -33,8 +53,20 @@ export default function Home() {
       <Navbar
         totalIncidents={incidents.length}
         highPriorityCount={highPriorityCount}
-        onRefresh={() => setIncidents([...MOCK_INCIDENTS])}
+        onRefresh={() => void refreshIncidents()}
       />
+
+      {error && (
+        <div className="mx-auto mt-4 w-[calc(100%-2rem)] max-w-7xl rounded-xl border border-rose-700/50 bg-rose-950/70 px-4 py-3 text-sm text-rose-200">
+          No se pudo sincronizar el dashboard: {error}
+        </div>
+      )}
+
+      {isLoading && (
+        <div className="mx-auto mt-4 w-[calc(100%-2rem)] max-w-7xl rounded-xl border border-slate-800 bg-slate-900 px-4 py-3 text-sm text-slate-300">
+          Cargando incidentes desde Kuska API…
+        </div>
+      )}
 
       {/* Main Dashboard Layout Grid */}
       <main className="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -78,7 +110,6 @@ export default function Home() {
         <IncidentDetail
           incident={selectedIncident}
           onClose={() => setIsDetailOpen(false)}
-          onValidate={handleValidateIncident}
         />
       )}
 
