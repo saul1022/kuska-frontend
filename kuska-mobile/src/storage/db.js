@@ -2,6 +2,16 @@ import * as SQLite from 'expo-sqlite';
 
 const db = SQLite.openDatabaseSync('kuska.db');
 
+/**
+ * Borra los reportes de ejemplo sembrados por versiones anteriores. Tenian ids
+ * '1'..'4' (no son UUID), sin GPS y con fotos remotas, asi que el sincronizador
+ * los reintentaba sin parar y siempre fallaban: en pantalla parecia que la app
+ * estaba rota.
+ */
+export function deleteSeedReports() {
+  db.runSync(`DELETE FROM reports WHERE client_id IN ('1', '2', '3', '4')`);
+}
+
 export function initDb() {
   db.execSync(`
     CREATE TABLE IF NOT EXISTS reports (

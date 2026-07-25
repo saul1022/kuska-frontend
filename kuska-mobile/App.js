@@ -17,10 +17,15 @@ import CapturaScreen from './src/screens/CapturaScreen';
 import ReporteGuardadoScreen from './src/screens/ReporteGuardadoScreen';
 import ReporteDetalleScreen from './src/screens/ReporteDetalleScreen';
 import MisReportesScreen from './src/screens/MisReportesScreen';
-import { mockReports } from './src/data/mockReports';
 import { colors } from './src/theme';
 import { generateUuid } from './src/utils/uuid';
-import { initDb, insertReport, updateReportStatus, getAllReports, countReports } from './src/storage/db';
+import {
+  initDb,
+  insertReport,
+  updateReportStatus,
+  getAllReports,
+  deleteSeedReports,
+} from './src/storage/db';
 import { persistMedia } from './src/storage/mediaStorage';
 import { mapDbRowToReport } from './src/storage/mapReport';
 import { useNetworkSync } from './src/hooks/useNetworkSync';
@@ -58,25 +63,6 @@ function Tabs({ reports, onSubmit, onRetry }) {
   );
 }
 
-function seedIfEmpty() {
-  if (countReports() > 0) return;
-  const now = Date.now();
-  mockReports.forEach((mock, index) => {
-    insertReport({
-      clientId: mock.id,
-      title: mock.title,
-      description: mock.description,
-      lat: null,
-      lon: null,
-      photoUri: mock.imageUrl,
-      videoUri: null,
-      createdAtClient: new Date(now - index * 60000).toISOString(),
-      status: mock.status,
-      incidentId: null,
-    });
-  });
-}
-
 export default function App() {
   const [reports, setReports] = useState([]);
   const [dbReady, setDbReady] = useState(false);
@@ -96,7 +82,7 @@ export default function App() {
   useEffect(() => {
     try {
       initDb();
-      seedIfEmpty();
+      deleteSeedReports();
       reloadReports();
     } catch (e) {
       console.error('Error inicializando la base de datos local:', e);
