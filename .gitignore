@@ -1,0 +1,9 @@
+# Config local de herramientas de IA (no forma parte del proyecto)
+.agents/
+.claude/
+.codex/
+.gemini/
+
+# npm accidental en la raíz (el proyecto real vive en kuska-mobile/)
+/package.json
+/package-lock.json
