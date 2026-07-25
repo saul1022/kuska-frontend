@@ -16,6 +16,7 @@ import { JetBrainsMono_600SemiBold } from '@expo-google-fonts/jetbrains-mono';
 import CapturaScreen from './src/screens/CapturaScreen';
 import ReporteGuardadoScreen from './src/screens/ReporteGuardadoScreen';
 import MisReportesScreen from './src/screens/MisReportesScreen';
+import ReportDetailScreen from './src/screens/ReportDetailScreen';
 import { mockReports } from './src/data/mockReports';
 import { colors } from './src/theme';
 import { createIncident } from './src/api/incidents';
@@ -51,7 +52,7 @@ function Tabs({ reports, onSubmit, onRetry }) {
         {(props) => <CapturaScreen {...props} onSubmit={onSubmit} />}
       </Tab.Screen>
       <Tab.Screen name="MisReportes" options={{ title: 'Mis Reportes' }}>
-        {() => <MisReportesScreen reports={reports} onRetry={onRetry} />}
+        {(props) => <MisReportesScreen {...props} reports={reports} onRetry={onRetry} />}
       </Tab.Screen>
     </Tab.Navigator>
   );
@@ -217,6 +218,9 @@ export default function App() {
           component={ReporteGuardadoScreen}
           options={{ presentation: 'modal' }}
         />
+        <Stack.Screen name="ReporteDetalle">
+          {(props) => <ReportDetailScreen {...props} reports={reports} onRetry={handleRetry} />}
+        </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );

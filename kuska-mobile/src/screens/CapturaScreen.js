@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
 import { colors, typography, spacing, radius } from '../theme';
 import PrimaryButton from '../components/PrimaryButton';
 import CameraCaptureModal from '../components/CameraCaptureModal';
@@ -24,6 +25,24 @@ export default function CapturaScreen({ navigation, onSubmit }) {
   const location = useLocationCapture();
 
   const canSubmit = Boolean(photoUri);
+
+  async function pickFromGallery(kind) {
+    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permission.granted) return;
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: kind === 'video' ? ['videos'] : ['images'],
+      quality: 0.6,
+    });
+    if (result.canceled || !result.assets?.length) return;
+
+    const uri = result.assets[0].uri;
+    if (kind === 'video') {
+      setVideoUri(uri);
+    } else {
+      setPhotoUri(uri);
+    }
+  }
 
   function handleSubmit() {
     onSubmit({
@@ -53,41 +72,53 @@ export default function CapturaScreen({ navigation, onSubmit }) {
         </View>
 
         <View style={styles.mediaRow}>
-          <Pressable
-            onPress={() => setCaptureMode('photo')}
-            style={[styles.mediaButton, photoUri && styles.mediaButtonActive]}
-          >
-            <Text style={[typography.labelStatus, styles.reqBadge]}>Req</Text>
-            {photoUri ? (
-              <Image source={{ uri: photoUri }} style={StyleSheet.absoluteFill} />
-            ) : (
-              <>
-                <View style={styles.mediaIconWrap}>
-                  <MaterialCommunityIcons name="camera" size={32} color={colors.primary} />
-                </View>
-                <Text style={[typography.buttonText, styles.mediaLabel]}>Tomar Foto</Text>
-              </>
-            )}
-          </Pressable>
+          <View style={{ flex: 1, gap: 8 }}>
+            <Pressable
+              onPress={() => setCaptureMode('photo')}
+              style={[styles.mediaButton, photoUri && styles.mediaButtonActive]}
+            >
+              <Text style={[typography.labelStatus, styles.reqBadge]}>Req</Text>
+              {photoUri ? (
+                <Image source={{ uri: photoUri }} style={StyleSheet.absoluteFill} />
+              ) : (
+                <>
+                  <View style={styles.mediaIconWrap}>
+                    <MaterialCommunityIcons name="camera" size={32} color={colors.primary} />
+                  </View>
+                  <Text style={[typography.buttonText, styles.mediaLabel]}>Tomar Foto</Text>
+                </>
+              )}
+            </Pressable>
+            <Pressable onPress={() => pickFromGallery('photo')} style={styles.galleryLink}>
+              <MaterialCommunityIcons name="image-multiple-outline" size={16} color={colors.onSurfaceVariant} />
+              <Text style={[typography.labelStatus, styles.galleryLinkText]}>Elegir de galería</Text>
+            </Pressable>
+          </View>
 
-          <Pressable
-            onPress={() => setCaptureMode('video')}
-            style={[styles.mediaButton, styles.mediaButtonSecondary, videoUri && styles.mediaButtonActive]}
-          >
-            <Text style={[typography.labelStatus, styles.optBadge]}>Opc</Text>
-            {videoUri ? (
-              <View style={styles.mediaIconWrapSecondary}>
-                <MaterialCommunityIcons name="video-check" size={32} color={colors.statusLowSynced} />
-              </View>
-            ) : (
-              <View style={styles.mediaIconWrapSecondary}>
-                <MaterialCommunityIcons name="video" size={32} color={colors.secondary} />
-              </View>
-            )}
-            <Text style={[typography.buttonText, styles.mediaLabelSecondary]}>
-              {videoUri ? 'Video listo' : 'Grabar Video'}
-            </Text>
-          </Pressable>
+          <View style={{ flex: 1, gap: 8 }}>
+            <Pressable
+              onPress={() => setCaptureMode('video')}
+              style={[styles.mediaButton, styles.mediaButtonSecondary, videoUri && styles.mediaButtonActive]}
+            >
+              <Text style={[typography.labelStatus, styles.optBadge]}>Opc</Text>
+              {videoUri ? (
+                <View style={styles.mediaIconWrapSecondary}>
+                  <MaterialCommunityIcons name="video-check" size={32} color={colors.statusLowSynced} />
+                </View>
+              ) : (
+                <View style={styles.mediaIconWrapSecondary}>
+                  <MaterialCommunityIcons name="video" size={32} color={colors.secondary} />
+                </View>
+              )}
+              <Text style={[typography.buttonText, styles.mediaLabelSecondary]}>
+                {videoUri ? 'Video listo' : 'Grabar Video'}
+              </Text>
+            </Pressable>
+            <Pressable onPress={() => pickFromGallery('video')} style={styles.galleryLink}>
+              <MaterialCommunityIcons name="image-multiple-outline" size={16} color={colors.onSurfaceVariant} />
+              <Text style={[typography.labelStatus, styles.galleryLinkText]}>Elegir de galería</Text>
+            </Pressable>
+          </View>
         </View>
 
         <View style={{ gap: 8 }}>
@@ -200,6 +231,17 @@ const styles = StyleSheet.create({
   },
   mediaButtonActive: {
     borderColor: colors.statusLowSynced,
+  },
+  galleryLink: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    paddingVertical: 6,
+  },
+  galleryLinkText: {
+    color: colors.onSurfaceVariant,
+    fontSize: 12,
   },
   reqBadge: {
     position: 'absolute',

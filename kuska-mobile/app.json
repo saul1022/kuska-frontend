@@ -36,6 +36,12 @@
         {
           "locationAlwaysAndWhenInUsePermission": "Kuska necesita tu ubicación para marcar dónde ocurrió el incidente."
         }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Kuska necesita acceso a tus fotos para adjuntar evidencia existente al reporte."
+        }
       ]
     ]
   }
