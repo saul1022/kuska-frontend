@@ -20,22 +20,27 @@ export default function CapturaScreen({ navigation, onSubmit }) {
   const [photoUri, setPhotoUri] = useState(null);
   const [videoUri, setVideoUri] = useState(null);
   const [captureMode, setCaptureMode] = useState(null); // 'photo' | 'video' | null
+  const [isSaving, setIsSaving] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
 
   const location = useLocationCapture();
 
-  const canSubmit = Boolean(photoUri);
+  const canSubmit = Boolean(photoUri && description.trim().length >= 10 && location.coords && !isSaving);
 
-  function handleSubmit() {
-    onSubmit({
-      description,
-      photoUri,
-      videoUri,
-      location: location.coords,
-    });
-    setDescription('');
-    setPhotoUri(null);
-    setVideoUri(null);
-    navigation.navigate('ReporteGuardado');
+  async function handleSubmit() {
+    setIsSaving(true);
+    setSubmitError(null);
+    try {
+      const clientId = await onSubmit({ description: description.trim(), photoUri, videoUri, location: location.coords });
+      setDescription('');
+      setPhotoUri(null);
+      setVideoUri(null);
+      navigation.navigate('ReporteGuardado', { clientId });
+    } catch (error) {
+      setSubmitError(error?.message ?? 'No se pudo guardar el reporte.');
+    } finally {
+      setIsSaving(false);
+    }
   }
 
   return (
@@ -101,6 +106,9 @@ export default function CapturaScreen({ navigation, onSubmit }) {
             value={description}
             onChangeText={setDescription}
           />
+          {description.length > 0 && description.trim().length < 10 ? (
+            <Text style={styles.validationText}>Escribe al menos 10 caracteres.</Text>
+          ) : null}
         </View>
 
         <Pressable
@@ -127,8 +135,9 @@ export default function CapturaScreen({ navigation, onSubmit }) {
         </Pressable>
 
         <View style={{ marginTop: 16 }}>
+          {submitError ? <Text style={styles.validationText}>{submitError}</Text> : null}
           <PrimaryButton
-            label="Enviar Reporte"
+            label={isSaving ? 'Guardando…' : 'Enviar Reporte'}
             icon="send"
             onPress={handleSubmit}
             disabled={!canSubmit}
@@ -263,6 +272,7 @@ const styles = StyleSheet.create({
     color: colors.onSurface,
     textAlignVertical: 'top',
   },
+  validationText: { color: colors.statusHighError, fontSize: 13, marginBottom: 8 },
   locationBox: {
     flexDirection: 'row',
     alignItems: 'center',

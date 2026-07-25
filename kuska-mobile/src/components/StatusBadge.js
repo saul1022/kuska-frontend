@@ -7,6 +7,10 @@ const CONFIG = {
   pending: { color: colors.statusMediumSync, icon: 'cloud-sync', label: 'Pend.' },
   error: { color: colors.statusHighError, icon: 'cloud-off-outline', label: 'Error' },
   draft: { color: colors.onSurfaceVariant, icon: 'file-document-edit-outline', label: 'Borrador' },
+  processing: { color: colors.statusMediumSync, icon: 'progress-clock', label: 'Procesando' },
+  needs_review: { color: colors.statusMediumSync, icon: 'account-alert', label: 'Revisión' },
+  validated: { color: colors.statusLowSynced, icon: 'check-decagram', label: 'Validado' },
+  processing_failed: { color: colors.statusHighError, icon: 'alert-circle', label: 'Falló análisis' },
 };
 
 export default function StatusBadge({ status }) {

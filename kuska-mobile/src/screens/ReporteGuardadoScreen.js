@@ -4,7 +4,8 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { colors, typography, spacing } from '../theme';
 import PrimaryButton from '../components/PrimaryButton';
 
-export default function ReporteGuardadoScreen({ navigation }) {
+export default function ReporteGuardadoScreen({ navigation, route, report }) {
+  const isSynced = report?.status === 'synced';
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.content}>
@@ -14,11 +15,13 @@ export default function ReporteGuardadoScreen({ navigation }) {
 
         <Text style={[typography.headlineLg, styles.title]}>Reporte Guardado</Text>
         <Text style={[typography.bodyLg, styles.subtitle]}>
-          Tu información ha sido registrada de forma segura. Se sincronizará automáticamente en
-          segundo plano cuando se detecte conexión de red.
+          {isSynced
+            ? `El backend recibió el reporte. Estado: ${report.displayStatus}.`
+            : 'Tu información se guardó en el dispositivo y se sincronizará automáticamente cuando haya conexión.'}
         </Text>
 
         <View style={styles.actions}>
+          {report ? <PrimaryButton label="Ver resultado" onPress={() => navigation.replace('ReporteDetalle', { clientId: route.params?.clientId })} /> : null}
           <PrimaryButton
             label="Ver mis reportes"
             variant="secondary"

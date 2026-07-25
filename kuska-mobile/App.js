@@ -15,15 +15,16 @@ import { JetBrainsMono_600SemiBold } from '@expo-google-fonts/jetbrains-mono';
 
 import CapturaScreen from './src/screens/CapturaScreen';
 import ReporteGuardadoScreen from './src/screens/ReporteGuardadoScreen';
+import ReporteDetalleScreen from './src/screens/ReporteDetalleScreen';
 import MisReportesScreen from './src/screens/MisReportesScreen';
 import { mockReports } from './src/data/mockReports';
 import { colors } from './src/theme';
-import { createIncident } from './src/api/incidents';
 import { generateUuid } from './src/utils/uuid';
 import { initDb, insertReport, updateReportStatus, getAllReports, countReports } from './src/storage/db';
 import { persistMedia } from './src/storage/mediaStorage';
 import { mapDbRowToReport } from './src/storage/mapReport';
 import { useNetworkSync } from './src/hooks/useNetworkSync';
+import { payloadFromRow, refreshIncidentDetail, synchronizeReport } from './src/services/reportSync';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -51,7 +52,7 @@ function Tabs({ reports, onSubmit, onRetry }) {
         {(props) => <CapturaScreen {...props} onSubmit={onSubmit} />}
       </Tab.Screen>
       <Tab.Screen name="MisReportes" options={{ title: 'Mis Reportes' }}>
-        {() => <MisReportesScreen reports={reports} onRetry={onRetry} />}
+        {(props) => <MisReportesScreen {...props} reports={reports} onRetry={onRetry} />}
       </Tab.Screen>
     </Tab.Navigator>
   );
@@ -136,7 +137,7 @@ export default function App() {
       // Intento de envío inmediato si hay red; si falla o no hay red, queda
       // "pendiente" en SQLite y useNetworkSync lo reintentará automáticamente.
       try {
-        const result = await createIncident({
+        const payload = {
           clientId,
           description,
           lat: location?.lat,
@@ -144,12 +145,15 @@ export default function App() {
           createdAtClient,
           photoUris: persistedPhotoUri ? [persistedPhotoUri] : [],
           videoUri: persistedVideoUri,
-        });
-        updateReportStatus(clientId, 'synced', result.incident_id);
+        };
+        synchronizeReport(payload)
+          .catch(() => updateReportStatus(clientId, 'error', null))
+          .finally(reloadReports);
       } catch (e) {
         updateReportStatus(clientId, 'error', null);
       }
       reloadReports();
+      return clientId;
     },
     [reloadReports]
   );
@@ -163,16 +167,7 @@ export default function App() {
       reloadReports();
 
       try {
-        const result = await createIncident({
-          clientId: row.client_id,
-          description: row.description,
-          lat: row.lat,
-          lon: row.lon,
-          createdAtClient: row.created_at_client,
-          photoUris: row.photo_uri ? [row.photo_uri] : [],
-          videoUri: row.video_uri,
-        });
-        updateReportStatus(clientId, 'synced', result.incident_id);
+        await synchronizeReport(payloadFromRow(row));
       } catch (e) {
         updateReportStatus(clientId, 'error', null);
       }
@@ -180,6 +175,14 @@ export default function App() {
     },
     [reloadReports]
   );
+
+  const handleRefreshDetail = useCallback(async (report) => {
+    try {
+      await refreshIncidentDetail(report.id, report.incidentId);
+    } finally {
+      reloadReports();
+    }
+  }, [reloadReports]);
 
   const onReady = useCallback(async () => {
     if ((fontsLoaded || fontsError) && dbReady) {
@@ -214,9 +217,24 @@ export default function App() {
         </Stack.Screen>
         <Stack.Screen
           name="ReporteGuardado"
-          component={ReporteGuardadoScreen}
           options={{ presentation: 'modal' }}
-        />
+        >
+          {(props) => (
+            <ReporteGuardadoScreen
+              {...props}
+              report={reports.find((item) => item.id === props.route.params?.clientId)}
+            />
+          )}
+        </Stack.Screen>
+        <Stack.Screen name="ReporteDetalle">
+          {(props) => (
+            <ReporteDetalleScreen
+              {...props}
+              report={reports.find((item) => item.id === props.route.params?.clientId)}
+              onRefresh={handleRefreshDetail}
+            />
+          )}
+        </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -17,6 +17,18 @@ export function initDb() {
       incident_id TEXT
     );
   `);
+
+  const existingColumns = new Set(
+    db.getAllSync('PRAGMA table_info(reports)').map((column) => column.name)
+  );
+  const newColumns = {
+    backend_status: 'TEXT', priority: 'TEXT', incident_type: 'TEXT', damage_level: 'TEXT',
+    trapped_people_possible: 'INTEGER', secondary_risks: 'TEXT', explanation: 'TEXT',
+    confidence: 'REAL', backend_updated_at: 'TEXT',
+  };
+  Object.entries(newColumns).forEach(([name, type]) => {
+    if (!existingColumns.has(name)) db.execSync(`ALTER TABLE reports ADD COLUMN ${name} ${type}`);
+  });
 }
 
 export function insertReport(report) {
@@ -39,12 +51,27 @@ export function insertReport(report) {
   );
 }
 
-export function updateReportStatus(clientId, status, incidentId) {
-  db.runSync(`UPDATE reports SET status = ?, incident_id = ? WHERE client_id = ?`, [
+export function updateReportStatus(clientId, status, incidentId, backendStatus = null) {
+  db.runSync(`UPDATE reports SET status = ?, incident_id = ?, backend_status = COALESCE(?, backend_status) WHERE client_id = ?`, [
     status,
     incidentId ?? null,
+    backendStatus,
     clientId,
   ]);
+}
+
+export function saveIncidentDetail(clientId, detail) {
+  const gemma = detail.gemma_result;
+  db.runSync(
+    `UPDATE reports SET incident_id = COALESCE(?, incident_id), backend_status = ?, priority = ?,
+      incident_type = ?, damage_level = ?, trapped_people_possible = ?, secondary_risks = ?,
+      explanation = ?, confidence = ?, backend_updated_at = ? WHERE client_id = ?`,
+    [detail.id ?? null, detail.status ?? null, detail.priority ?? gemma?.priority ?? null,
+      detail.type ?? gemma?.type ?? null, gemma?.damage_level ?? null,
+      gemma?.trapped_people_possible == null ? null : Number(gemma.trapped_people_possible),
+      JSON.stringify(gemma?.secondary_risks ?? []), gemma?.explanation ?? null,
+      gemma?.confidence ?? null, new Date().toISOString(), clientId]
+  );
 }
 
 export function getAllReports() {
@@ -53,6 +80,10 @@ export function getAllReports() {
 
 export function getPendingReports() {
   return db.getAllSync(`SELECT * FROM reports WHERE status IN ('pending', 'error')`);
+}
+
+export function getReportsWithIncidentId() {
+  return db.getAllSync(`SELECT * FROM reports WHERE incident_id IS NOT NULL`);
 }
 
 export function countReports() {

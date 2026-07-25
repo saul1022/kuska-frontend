@@ -9,6 +9,8 @@ import { API_BASE_URL, MOCK_API } from './config';
  * @property {string} createdAtClient - ISO 8601
  * @property {string[]} photoUris
  * @property {string=} videoUri
+ * @property {string[]=} photoUrls
+ * @property {string=} videoUrl
  */
 
 function buildFormData(payload) {
@@ -19,7 +21,7 @@ function buildFormData(payload) {
   form.append('client_id', payload.clientId);
   form.append('created_at_client', payload.createdAtClient);
 
-  payload.photoUris.forEach((uri, index) => {
+  (payload.photoUris ?? []).forEach((uri, index) => {
     form.append('photos[]', {
       uri,
       name: `photo_${index}.jpg`,
@@ -52,13 +54,26 @@ export async function createIncident(payload) {
   const response = await fetch(`${API_BASE_URL}/incidents`, {
     method: 'POST',
     body: buildFormData(payload),
-    headers: { 'Content-Type': 'multipart/form-data' },
   });
 
   if (!response.ok) {
-    throw new Error(`POST /incidents falló con status ${response.status}`);
+    const detail = await response.text();
+    throw new Error(`POST /incidents falló con status ${response.status}: ${detail}`);
   }
 
+  return response.json();
+}
+
+/** GET /incidents/{incident_id}: incluye el resultado de Gemma. */
+export async function getIncident(incidentId) {
+  if (MOCK_API) {
+    return { id: incidentId, status: 'processing', priority: null, type: null, gemma_result: null };
+  }
+  const response = await fetch(`${API_BASE_URL}/incidents/${encodeURIComponent(incidentId)}`);
+  if (!response.ok) {
+    const detail = await response.text();
+    throw new Error(`GET /incidents/${incidentId} falló con status ${response.status}: ${detail}`);
+  }
   return response.json();
 }
 
@@ -80,19 +95,22 @@ export async function syncBatch(payloads) {
   const response = await fetch(`${API_BASE_URL}/sync/batch`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(
-      payloads.map((p) => ({
+    body: JSON.stringify({
+      incidents: payloads.map((p) => ({
         description: p.description,
         lat: p.lat,
         lon: p.lon,
         client_id: p.clientId,
         created_at_client: p.createdAtClient,
-      }))
-    ),
+        photo_urls: p.photoUrls ?? [],
+        video_url: p.videoUrl ?? null,
+      })),
+    }),
   });
 
   if (!response.ok) {
-    throw new Error(`POST /sync/batch falló con status ${response.status}`);
+    const detail = await response.text();
+    throw new Error(`POST /sync/batch falló con status ${response.status}: ${detail}`);
   }
 
   return response.json();

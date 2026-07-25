@@ -16,7 +16,28 @@ export function mapDbRowToReport(row) {
         ? `${row.lat.toFixed(4)}, ${row.lon.toFixed(4)}`
         : 'Sin GPS',
     status: row.status,
+    displayStatus: row.backend_status || row.status,
+    backendStatus: row.backend_status,
+    incidentId: row.incident_id,
+    priority: row.priority,
+    incidentType: row.incident_type,
+    damageLevel: row.damage_level,
+    trappedPeoplePossible: row.trapped_people_possible == null ? null : Boolean(row.trapped_people_possible),
+    secondaryRisks: parseRisks(row.secondary_risks),
+    explanation: row.explanation,
+    confidence: row.confidence,
+    backendUpdatedAt: row.backend_updated_at,
     imageUrl: row.photo_uri,
     videoUri: row.video_uri,
   };
+}
+
+function parseRisks(value) {
+  if (!value) return [];
+  try {
+    const parsed = JSON.parse(value);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
 }

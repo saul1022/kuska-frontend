@@ -4,7 +4,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { colors, typography, spacing } from '../theme';
 import ReportCard from '../components/ReportCard';
 
-export default function MisReportesScreen({ reports, onRetry }) {
+export default function MisReportesScreen({ navigation, reports, onRetry }) {
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
       <View style={styles.header}>
@@ -35,7 +35,11 @@ export default function MisReportesScreen({ reports, onRetry }) {
             <Text style={[typography.headlineLg, styles.listTitle]}>Mis Reportes</Text>
           }
           renderItem={({ item }) => (
-            <ReportCard report={item} onPress={() => {}} onRetry={() => onRetry?.(item.id)} />
+            <ReportCard
+              report={item}
+              onPress={() => navigation.navigate('ReporteDetalle', { clientId: item.id })}
+              onRetry={() => onRetry?.(item.id)}
+            />
           )}
         />
       )}
