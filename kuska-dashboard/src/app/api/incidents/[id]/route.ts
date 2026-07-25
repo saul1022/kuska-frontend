@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 
-const API_URL = (process.env.KUSKA_API_URL ?? 'http://127.0.0.1:8000').replace(/\/$/, '');
+const API_URL = (
+  process.env.KUSKA_API_URL ?? 'https://kuska-lixb.onrender.com'
+).replace(/\/$/, '');
 
 export async function GET(
   _request: Request,

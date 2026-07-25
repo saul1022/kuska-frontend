@@ -1,6 +1,7 @@
 import { Incident } from '../types/incident';
 
 type IncidentListResponse = Omit<Incident, 'photos' | 'thumbnail_url' | 'priority' | 'type'> & {
+  description?: string;
   photos?: string[];
   thumbnail_url: string | null;
   priority: Incident['priority'] | null;
@@ -18,6 +19,7 @@ async function parseResponse<T>(response: Response): Promise<T> {
 function normalizeIncident(incident: IncidentListResponse): Incident {
   return {
     ...incident,
+    description: incident.description ?? 'Sin descripción disponible',
     priority: incident.priority ?? 'baja',
     type: incident.type ?? 'otro',
     photos: incident.photos ?? [],
