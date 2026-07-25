@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kuska - Mis Reportes</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700&amp;family=JetBrains+Mono:wght@600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-secondary": "#ffffff",
+                      "on-surface": "#1c1b1b",
+                      "surface-container-lowest": "#ffffff",
+                      "primary": "#000101",
+                      "on-secondary-fixed-variant": "#45474a",
+                      "on-error": "#ffffff",
+                      "on-tertiary-container": "#8b837d",
+                      "surface-dim": "#ddd9d9",
+                      "surface-tint": "#5d5e61",
+                      "tertiary-fixed": "#ebe0da",
+                      "on-secondary-container": "#636468",
+                      "secondary-fixed-dim": "#c6c6ca",
+                      "surface-variant": "#e5e2e1",
+                      "error": "#ba1a1a",
+                      "tertiary-container": "#201b17",
+                      "background": "#fcf8f8",
+                      "surface-container-high": "#ebe7e7",
+                      "surface-container-low": "#f6f3f2",
+                      "on-primary-container": "#838486",
+                      "error-container": "#ffdad6",
+                      "status-high-error": "#D32F2F",
+                      "inverse-on-surface": "#f4f0ef",
+                      "secondary": "#5d5e62",
+                      "surface": "#fcf8f8",
+                      "surface-container-highest": "#e5e2e1",
+                      "status-medium-sync": "#FF8F00",
+                      "tertiary-fixed-dim": "#cfc5be",
+                      "surface-bright": "#fcf8f8",
+                      "on-secondary-fixed": "#1a1c1f",
+                      "outline-variant": "#c5c6ca",
+                      "secondary-container": "#e2e2e6",
+                      "on-primary": "#ffffff",
+                      "surface-container": "#f1eded",
+                      "on-primary-fixed-variant": "#454749",
+                      "inverse-surface": "#313030",
+                      "on-primary-fixed": "#1a1c1e",
+                      "inverse-primary": "#c6c6c9",
+                      "on-tertiary": "#ffffff",
+                      "input-active": "#005FB8",
+                      "primary-fixed": "#e2e2e5",
+                      "tertiary": "#010100",
+                      "outline": "#75777a",
+                      "on-background": "#1c1b1b",
+                      "on-error-container": "#93000a",
+                      "background-surface": "#FFFFFF",
+                      "on-tertiary-fixed": "#201b17",
+                      "status-low-synced": "#2E7D32",
+                      "secondary-fixed": "#e2e2e6",
+                      "on-tertiary-fixed-variant": "#4c4641",
+                      "primary-container": "#1a1c1e",
+                      "on-surface-variant": "#44474a",
+                      "primary-fixed-dim": "#c6c6c9"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "touch-target-min": "56px",
+                      "base-unit": "8px",
+                      "margin-mobile": "20px",
+                      "gutter": "16px"
+              },
+              "fontFamily": {
+                      "headline-md": [
+                              "Hanken Grotesk"
+                      ],
+                      "button-text": [
+                              "Hanken Grotesk"
+                      ],
+                      "body-lg": [
+                              "Hanken Grotesk"
+                      ],
+                      "label-status": [
+                              "JetBrains Mono"
+                      ],
+                      "body-md": [
+                              "Hanken Grotesk"
+                      ],
+                      "headline-lg": [
+                              "Hanken Grotesk"
+                      ]
+              },
+              "fontSize": {
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "button-text": [
+                              "18px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-status": [
+                              "14px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "fontWeight": "700"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        body {
+            background-color: #fcf8f8; /* background */
+            color: #1c1b1b; /* on-background */
+        }
+        
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        .material-symbols-outlined.filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-screen flex flex-col pb-[80px]">
+<!-- TopAppBar (Kuska) -->
+<header class="fixed top-0 w-full z-50 bg-background-surface border-b border-surface-variant flex items-center justify-between px-margin-mobile h-touch-target-min">
+<div class="flex items-center gap-gutter">
+<span class="material-symbols-outlined text-primary cursor-pointer active:opacity-80 transition-opacity p-2 -ml-2" data-icon="menu">menu</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Kuska</h1>
+</div>
+<div>
+<!-- Optional Actions -->
+</div>
+</header>
+<!-- TopAppBar (En línea Status) -->
+<div class="sticky top-[56px] w-full z-40 bg-status-low-synced/10 flex items-center justify-center h-8 w-full cursor-default">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-status-low-synced text-[16px]" data-icon="wifi">wifi</span>
+<span class="font-label-status text-label-status text-status-low-synced uppercase">En línea</span>
+</div>
+</div>
+<!-- Main Content Canvas -->
+<main class="flex-1 px-margin-mobile pt-8 pb-12 mt-[88px] max-w-4xl mx-auto w-full">
+<!-- Header -->
+<div class="mb-8 flex items-end justify-between">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Mis Reportes</h2>
+<button class="flex items-center gap-2 text-primary hover:bg-surface-container-low px-4 py-2 rounded-DEFAULT transition-colors">
+<span class="material-symbols-outlined text-[20px]">filter_list</span>
+<span class="font-button-text text-button-text">Filtrar</span>
+</button>
+</div>
+<!-- Report List Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Report Card 1 (Synced) -->
+<article class="bg-surface-container-lowest border border-secondary-container rounded-lg overflow-hidden flex flex-col sm:flex-row shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer active:scale-[0.99]">
+<div class="sm:w-[140px] h-[200px] sm:h-auto shrink-0 relative bg-surface-container">
+<img class="absolute inset-0 w-full h-full object-cover" data-alt="A highly detailed close-up shot of a structural crack on a concrete wall in an urban setting. The lighting is harsh midday sun, creating stark shadows that emphasize the depth of the damage. The aesthetic is documentary and raw, using a neutral, high-contrast color palette of greys and blacks with subtle warm sunlight tones. Clean, functional minimalism." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCunX1f0xa5cDXtfafwHX3P-HSCiOkmwBuGwkQc7JeoR9ZbQ58ZkhU1GUgw7qfjx1tExv9bn5WKKlin6lF-3LZYpOp5Euf5zsLEVW-FRUpn8pOjV4kvoofbMJI3uj6nCIXe7Syri1pCZy9jeodAEQT3ajIoDXsNiPTYxmRabrDbr8MDFZSHDaCTCN0q-jDoJhPLIfd3GyC0sgQWAln_1mcTP82QIbB8AHyuua46LL9cqV1PBcnpeyg10_3Gwmr4Lj5JoRhg5WBxQtdU"/>
+</div>
+<div class="p-5 flex flex-col flex-1 justify-between gap-4">
+<div>
+<div class="flex items-start justify-between mb-2">
+<h3 class="font-body-lg text-body-lg font-bold text-on-surface line-clamp-1">Grieta en muro principal</h3>
+<!-- Synced Badge -->
+<div class="inline-flex items-center gap-1.5 bg-status-low-synced/10 px-2 py-1 rounded-DEFAULT shrink-0 ml-2">
+<span class="material-symbols-outlined text-[14px] text-status-low-synced filled" data-icon="cloud_done">cloud_done</span>
+<span class="font-label-status text-label-status text-status-low-synced text-[12px]">Sinc.</span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">Fisura estructural profunda en la pared este del edificio escolar tras la réplica de magnitud 4.5. Se requiere evaluación técnica urgente.</p>
+</div>
+<div class="flex items-center justify-between border-t border-surface-variant pt-3 mt-1">
+<span class="font-label-status text-label-status text-on-secondary-container flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">calendar_today</span>
+                            12 Oct, 14:30
+                        </span>
+<span class="font-label-status text-label-status text-on-secondary-container flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+                            Sector Norte
+                        </span>
+</div>
+</div>
+</article>
+<!-- Report Card 2 (Pending Sync) -->
+<article class="bg-surface-container-lowest border border-secondary-container rounded-lg overflow-hidden flex flex-col sm:flex-row shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer active:scale-[0.99]">
+<div class="sm:w-[140px] h-[200px] sm:h-auto shrink-0 relative bg-surface-container flex items-center justify-center">
+<img class="absolute inset-0 w-full h-full object-cover" data-alt="A wide documentary shot of a partially collapsed brick wall blocking a narrow alleyway. The lighting is overcast, giving a flat, functional look. Dust is settled on the debris. The color palette is muted earth tones, reds from the bricks, and cool greys. The image conveys a sense of quiet aftermath in a minimalist, objective reporting style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAGFJkfO5fPlCbzHkvrkRP2eZaDn81GKIWF0R_4ItNywdr1YdG0fbe96SIt6mNI868PATfmfrojAyXGsc6aRsP_iR8F_ST-Ri3oYvZtZMEgIjft8FzBZT484xsUrsoiYyXiDiDKiVzveW5DFJUOxn6f2iURvfDIs1dLv-REKEfrsYCzQKt8eVlzYhsNudpFe8mZNbktWjETQ8_-hqk5hCoNW8VhnHo1oIMe03ldL7ZifHnQWzSwdVdjMe-jXqlgADrb_btL3V2WjDS"/>
+</div>
+<div class="p-5 flex flex-col flex-1 justify-between gap-4">
+<div>
+<div class="flex items-start justify-between mb-2">
+<h3 class="font-body-lg text-body-lg font-bold text-on-surface line-clamp-1">Colapso parcial de barda</h3>
+<!-- Pending Badge -->
+<div class="inline-flex items-center gap-1.5 bg-status-medium-sync/10 px-2 py-1 rounded-DEFAULT shrink-0 ml-2">
+<span class="material-symbols-outlined text-[14px] text-status-medium-sync" data-icon="cloud_sync">cloud_sync</span>
+<span class="font-label-status text-label-status text-status-medium-sync text-[12px]">Pend.</span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">Barda perimetral caída bloqueando el acceso vehicular en la calle secundaria. No hay heridos reportados hasta el momento.</p>
+</div>
+<div class="flex items-center justify-between border-t border-surface-variant pt-3 mt-1">
+<span class="font-label-status text-label-status text-on-secondary-container flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">calendar_today</span>
+                            12 Oct, 15:45
+                        </span>
+<span class="font-label-status text-label-status text-on-secondary-container flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+                            Av. Central
+                        </span>
+</div>
+</div>
+</article>
+<!-- Report Card 3 (Error) -->
+<article class="bg-surface-container-lowest border border-status-high-error/30 rounded-lg overflow-hidden flex flex-col sm:flex-row shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer active:scale-[0.99] relative">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-status-high-error z-10"></div>
+<div class="sm:w-[140px] h-[200px] sm:h-auto shrink-0 relative bg-surface-container flex items-center justify-center">
+<img class="absolute inset-0 w-full h-full object-cover grayscale opacity-80" data-alt="A photograph showing a ruptured water pipe flooding a paved street corner. The water reflects the grey, overcast sky. The image has high contrast, focusing on the texture of the broken asphalt and the flowing water. The palette is dominated by stark greys, blacks, and dull reflections, emphasizing an urgent utility failure in a highly functional aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4ax_ONRC9MMHzzx04oVlFOXJw-vM6Hvlgepd9p_6obcw7zsel2QD9rGkyZlRgvUktSmUEvkIpxfhfdwwdFP5joO50Hz3aRxsPKFpjVuB_1XoU2a_uu3xX91AnPC2gkUyzkyo_aWpb7g21m63dlpghojoQdilSChOwq7wgFGPsJxxkGqrbisNcp22q1-ukyVUiLJNGSucY5QJD1WKddXjI4lG7j9P-DmBT_SeSlybsvKpfSm7neEL2VBU6TNbHeWfj2FZQfkKPDAmo"/>
+<div class="absolute inset-0 bg-status-high-error/10"></div>
+</div>
+<div class="p-5 flex flex-col flex-1 justify-between gap-4 pl-6">
+<div>
+<div class="flex items-start justify-between mb-2">
+<h3 class="font-body-lg text-body-lg font-bold text-on-surface line-clamp-1">Fuga de agua masiva</h3>
+<!-- Error Badge -->
+<div class="inline-flex items-center gap-1.5 bg-status-high-error/10 px-2 py-1 rounded-DEFAULT shrink-0 ml-2">
+<span class="material-symbols-outlined text-[14px] text-status-high-error" data-icon="cloud_off">cloud_off</span>
+<span class="font-label-status text-label-status text-status-high-error text-[12px]">Error</span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">Tubería principal rota inundando la intersección. Riesgo de socavón inminente. El intento de subida falló por falta de red.</p>
+</div>
+<div class="flex items-center justify-between border-t border-status-high-error/20 pt-3 mt-1">
+<button class="font-button-text text-button-text text-status-high-error flex items-center gap-2 hover:bg-status-high-error/5 px-2 py-1 -ml-2 rounded-DEFAULT transition-colors">
+<span class="material-symbols-outlined text-[18px]">refresh</span>
+                            Reintentar
+                        </button>
+<span class="font-label-status text-label-status text-status-high-error flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+                            Plaza Sur
+                        </span>
+</div>
+</div>
+</article>
+<!-- Report Card 4 (Draft - No Image) -->
+<article class="bg-surface-container-lowest border border-dashed border-outline-variant rounded-lg overflow-hidden flex flex-col sm:flex-row shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer active:scale-[0.99]">
+<div class="sm:w-[140px] h-[120px] sm:h-auto shrink-0 relative bg-surface-container-low flex items-center justify-center">
+<span class="material-symbols-outlined text-[40px] text-on-secondary-container opacity-50" data-icon="add_photo_alternate">add_photo_alternate</span>
+</div>
+<div class="p-5 flex flex-col flex-1 justify-between gap-4">
+<div>
+<div class="flex items-start justify-between mb-2">
+<h3 class="font-body-lg text-body-lg font-bold text-on-surface line-clamp-1 italic text-on-surface-variant">Borrador: Daño eléctrico...</h3>
+<!-- Draft Badge -->
+<div class="inline-flex items-center gap-1.5 bg-surface-variant px-2 py-1 rounded-DEFAULT shrink-0 ml-2">
+<span class="material-symbols-outlined text-[14px] text-on-surface-variant" data-icon="edit_document">edit_document</span>
+<span class="font-label-status text-label-status text-on-surface-variant text-[12px]">Borrador</span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">Poste de luz inclinado peligrosamente sobre viviendas. Falta adjuntar evidencia fotográfica para completar el reporte.</p>
+</div>
+<div class="flex items-center justify-between border-t border-surface-variant pt-3 mt-1">
+<span class="font-label-status text-label-status text-on-secondary-container flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">edit</span>
+                            Última modif. hoy
+                        </span>
+<button class="font-button-text text-button-text text-primary flex items-center gap-1 hover:bg-surface-container px-2 py-1 -mr-2 rounded-DEFAULT transition-colors">
+                            Continuar
+                            <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</article>
+</div>
+</main>
+<!-- BottomNavBar (Semantic Match: "Mis Reportes") -->
+<nav class="fixed bottom-0 w-full z-50 h-[80px] bg-background-surface border-t border-surface-variant flex justify-around items-center px-4 md:hidden">
+<!-- Inactive Tab -->
+<a class="flex flex-col items-center justify-center text-secondary hover:bg-surface-container-low active:scale-95 transition-transform duration-150 w-full h-full rounded-xl" href="#">
+<span class="material-symbols-outlined text-[24px] mb-1" data-icon="emergency">emergency</span>
+<span class="font-button-text text-button-text text-[12px] leading-tight font-normal">Reportar</span>
+</a>
+<!-- Active Tab -->
+<a class="flex flex-col items-center justify-center text-primary font-bold hover:bg-surface-container-low active:scale-95 transition-transform duration-150 w-full h-full rounded-xl" href="#">
+<span class="material-symbols-outlined text-[24px] mb-1 filled" data-icon="assignment">assignment</span>
+<span class="font-button-text text-button-text text-[12px] leading-tight">Mis Reportes</span>
+</a>
+</nav>
+</body></html>

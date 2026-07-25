@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Captura de Reporte - Kuska</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts for Hanken Grotesk and JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700&amp;family=JetBrains+Mono:wght@600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS with Custom Config -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary": "#ffffff",
+                        "on-surface": "#1c1b1b",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#000101",
+                        "on-secondary-fixed-variant": "#45474a",
+                        "on-error": "#ffffff",
+                        "on-tertiary-container": "#8b837d",
+                        "surface-dim": "#ddd9d9",
+                        "surface-tint": "#5d5e61",
+                        "tertiary-fixed": "#ebe0da",
+                        "on-secondary-container": "#636468",
+                        "secondary-fixed-dim": "#c6c6ca",
+                        "surface-variant": "#e5e2e1",
+                        "error": "#ba1a1a",
+                        "tertiary-container": "#201b17",
+                        "background": "#fcf8f8",
+                        "surface-container-high": "#ebe7e7",
+                        "surface-container-low": "#f6f3f2",
+                        "on-primary-container": "#838486",
+                        "error-container": "#ffdad6",
+                        "status-high-error": "#D32F2F",
+                        "inverse-on-surface": "#f4f0ef",
+                        "secondary": "#5d5e62",
+                        "surface": "#fcf8f8",
+                        "surface-container-highest": "#e5e2e1",
+                        "status-medium-sync": "#FF8F00",
+                        "tertiary-fixed-dim": "#cfc5be",
+                        "surface-bright": "#fcf8f8",
+                        "on-secondary-fixed": "#1a1c1f",
+                        "outline-variant": "#c5c6ca",
+                        "secondary-container": "#e2e2e6",
+                        "on-primary": "#ffffff",
+                        "surface-container": "#f1eded",
+                        "on-primary-fixed-variant": "#454749",
+                        "inverse-surface": "#313030",
+                        "on-primary-fixed": "#1a1c1e",
+                        "inverse-primary": "#c6c6c9",
+                        "on-tertiary": "#ffffff",
+                        "input-active": "#005FB8",
+                        "primary-fixed": "#e2e2e5",
+                        "tertiary": "#010100",
+                        "outline": "#75777a",
+                        "on-background": "#1c1b1b",
+                        "on-error-container": "#93000a",
+                        "background-surface": "#FFFFFF",
+                        "on-tertiary-fixed": "#201b17",
+                        "status-low-synced": "#2E7D32",
+                        "secondary-fixed": "#e2e2e6",
+                        "on-tertiary-fixed-variant": "#4c4641",
+                        "primary-container": "#1a1c1e",
+                        "on-surface-variant": "#44474a",
+                        "primary-fixed-dim": "#c6c6c9"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "touch-target-min": "56px",
+                        "base-unit": "8px",
+                        "margin-mobile": "20px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Hanken Grotesk"],
+                        "button-text": ["Hanken Grotesk"],
+                        "body-lg": ["Hanken Grotesk"],
+                        "label-status": ["JetBrains Mono"],
+                        "body-md": ["Hanken Grotesk"],
+                        "headline-lg": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "button-text": ["18px", { "lineHeight": "24px", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "label-status": ["14px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { -webkit-tap-highlight-color: transparent; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .icon-fill { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md text-body-md antialiased min-h-screen flex flex-col selection:bg-primary selection:text-on-primary">
+<!-- TopAppBar (Kuska) - Shared Component -->
+<header class="bg-background-surface dark:bg-inverse-surface fixed top-0 w-full z-50 border-b border-surface-variant dark:border-outline flex items-center justify-between px-margin-mobile h-touch-target-min">
+<button class="w-[48px] h-[48px] flex items-center justify-center -ml-2 text-primary dark:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-variant active:opacity-80 transition-opacity rounded-full">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-on-primary-fixed">Kuska</h1>
+<div class="w-[48px] h-[48px]"></div> <!-- Spacer for center alignment -->
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 pt-[calc(56px+32px)] pb-[calc(80px+32px)] px-margin-mobile max-w-2xl mx-auto w-full flex flex-col gap-8">
+<!-- Header -->
+<div class="flex flex-col gap-2">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Nuevo Reporte</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Captura la evidencia del incidente con la mayor claridad posible.</p>
+</div>
+<!-- Media Capture Section (Bento Grid) -->
+<div class="grid grid-cols-2 gap-gutter">
+<!-- Camera Button (Mandatory) -->
+<button class="bg-surface-container-lowest border border-outline-variant hover:border-outline focus:border-input-active active:bg-surface-container-low transition-colors rounded-xl flex flex-col items-center justify-center gap-3 aspect-square relative overflow-hidden group">
+<div class="absolute top-3 right-3 bg-error-container text-on-error-container font-label-status text-label-status px-2 py-1 rounded">Req</div>
+<div class="w-16 h-16 rounded-full bg-surface-container-high group-active:bg-surface-variant flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined text-primary text-[32px] icon-fill">photo_camera</span>
+</div>
+<span class="font-button-text text-button-text text-on-surface">Tomar Foto</span>
+</button>
+<!-- Video Button (Optional) -->
+<button class="bg-surface border border-outline-variant hover:border-outline focus:border-input-active active:bg-surface-container-low transition-colors rounded-xl flex flex-col items-center justify-center gap-3 aspect-square relative overflow-hidden group">
+<div class="absolute top-3 right-3 bg-surface-variant text-on-surface-variant font-label-status text-label-status px-2 py-1 rounded">Opc</div>
+<div class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center group-active:bg-surface-variant transition-colors border-2 border-transparent">
+<span class="material-symbols-outlined text-secondary text-[32px]">videocam</span>
+</div>
+<span class="font-button-text text-button-text text-secondary">Grabar Video</span>
+</button>
+</div>
+<!-- Description Field -->
+<div class="flex flex-col gap-2">
+<label class="font-body-md text-body-md font-bold text-on-surface" for="description">Descripción detallada</label>
+<textarea class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl p-4 font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant focus:border-input-active focus:ring-1 focus:ring-input-active outline-none transition-shadow resize-none" id="description" placeholder="Describe qué ocurrió, magnitud de daños o detalles relevantes del entorno..." rows="4"></textarea>
+</div>
+<!-- Location Context (Passive) -->
+<div class="bg-surface-container-low border border-surface-variant rounded-lg p-4 flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant">location_on</span>
+<div class="flex flex-col">
+<span class="font-label-status text-label-status text-on-surface">Ubicación GPS (Automática)</span>
+<span class="font-body-md text-body-md text-on-surface-variant text-sm">Precisión: Alta (3m)</span>
+</div>
+</div>
+<!-- Spacer to push button down if content is short -->
+<div class="flex-1"></div>
+<!-- Primary Action -->
+<button class="w-full bg-primary text-on-primary font-button-text text-button-text h-[64px] rounded-full flex items-center justify-center gap-3 active:scale-[0.98] transition-transform shadow-none mt-4">
+<span class="material-symbols-outlined icon-fill">send</span>
+            Enviar Reporte
+        </button>
+</main>
+<!-- BottomNavBar - Shared Component -->
+<nav class="bg-background-surface dark:bg-inverse-surface fixed bottom-0 w-full z-50 h-[80px] border-t border-surface-variant dark:border-outline flex justify-around items-center px-4">
+<!-- Active Tab: Reportar -->
+<button class="flex flex-col items-center justify-center text-primary dark:text-inverse-primary font-bold hover:bg-surface-container-low active:scale-95 transition-transform duration-150 w-20 h-full gap-1 rounded-lg">
+<span class="material-symbols-outlined icon-fill">emergency</span>
+<span class="font-button-text text-button-text text-[14px] leading-tight">Reportar</span>
+</button>
+<!-- Inactive Tab: Mis Reportes -->
+<button class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed hover:bg-surface-container-low active:scale-95 transition-transform duration-150 w-20 h-full gap-1 rounded-lg">
+<span class="material-symbols-outlined">assignment</span>
+<span class="font-button-text text-button-text text-[14px] leading-tight font-normal">Mis Reportes</span>
+</button>
+</nav>
+</body></html>
