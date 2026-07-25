@@ -9,7 +9,8 @@ export async function GET(request: NextRequest) {
     const query = request.nextUrl.searchParams.toString();
     const response = await fetch(`${API_URL}/incidents${query ? `?${query}` : ''}`, {
       cache: 'no-store',
-      signal: AbortSignal.timeout(20_000),
+      // Render puede tardar más de 20 s en el primer acceso después de estar inactivo.
+      signal: AbortSignal.timeout(60_000),
     });
     const body = await response.text();
     return new NextResponse(body, {
