@@ -19,7 +19,7 @@ export function useNetworkSync(onChange) {
         const pending = getPendingReports();
         for (const row of pending) {
           try {
-            await synchronizeReport(payloadFromRow(row));
+            await synchronizeReport(payloadFromRow(row), onChange);
           } catch (e) {
             updateReportStatus(row.client_id, 'error', null);
           }

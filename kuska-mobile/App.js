@@ -132,7 +132,7 @@ export default function App() {
           photoUris: persistedPhotoUri ? [persistedPhotoUri] : [],
           videoUri: persistedVideoUri,
         };
-        synchronizeReport(payload)
+        synchronizeReport(payload, reloadReports)
           .catch(() => updateReportStatus(clientId, 'error', null))
           .finally(reloadReports);
       } catch (e) {
@@ -153,7 +153,7 @@ export default function App() {
       reloadReports();
 
       try {
-        await synchronizeReport(payloadFromRow(row));
+        await synchronizeReport(payloadFromRow(row), reloadReports);
       } catch (e) {
         updateReportStatus(clientId, 'error', null);
       }

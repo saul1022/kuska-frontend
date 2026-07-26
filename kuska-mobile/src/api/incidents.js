@@ -22,7 +22,7 @@ function buildFormData(payload) {
   form.append('created_at_client', payload.createdAtClient);
 
   (payload.photoUris ?? []).forEach((uri, index) => {
-    form.append('photos', {
+    form.append('photos[]', {
       uri,
       name: `photo_${index}.jpg`,
       type: 'image/jpeg',
