@@ -1,5 +1,6 @@
 import React from 'react';
-import { Activity, ShieldAlert, Cpu, Globe, RefreshCw } from 'lucide-react';
+import { ShieldAlert, Cpu, Globe, RefreshCw } from 'lucide-react';
+import { KuskaLogo } from './KuskaLogo';
 
 interface NavbarProps {
   totalIncidents: number;
@@ -17,9 +18,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
         {/* Brand & Tagline */}
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 via-rose-600 to-indigo-600 flex items-center justify-center shadow-md shadow-rose-500/20">
-            <Activity className="w-6 h-6 text-white animate-pulse" />
-          </div>
+          <KuskaLogo className="w-10 h-10 rounded-xl shadow-md shadow-rose-500/20" />
           <div>
             <div className="flex items-center space-x-2">
               <h1 className="text-xl font-bold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">
