@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 
-const API_URL = (process.env.KUSKA_API_URL ?? 'http://127.0.0.1:8000').replace(/\/$/, '');
+const API_URL = (
+  process.env.KUSKA_API_URL ?? 'https://kuska-lixb.onrender.com'
+).replace(/\/$/, '');
 
 export async function GET(
   _request: Request,
@@ -10,7 +12,7 @@ export async function GET(
   try {
     const response = await fetch(`${API_URL}/incidents/${encodeURIComponent(id)}`, {
       cache: 'no-store',
-      signal: AbortSignal.timeout(20_000),
+      signal: AbortSignal.timeout(60_000),
     });
     const body = await response.text();
     return new NextResponse(body, {
