@@ -1,0 +1,26 @@
+import { NextResponse } from 'next/server';
+
+const API_URL = (
+  process.env.KUSKA_API_URL ?? 'https://kuska-lixb.onrender.com'
+).replace(/\/$/, '');
+
+export async function GET(
+  _request: Request,
+  context: { params: Promise<{ id: string }> }
+) {
+  const { id } = await context.params;
+  try {
+    const response = await fetch(`${API_URL}/incidents/${encodeURIComponent(id)}`, {
+      cache: 'no-store',
+      signal: AbortSignal.timeout(60_000),
+    });
+    const body = await response.text();
+    return new NextResponse(body, {
+      status: response.status,
+      headers: { 'content-type': response.headers.get('content-type') ?? 'application/json' },
+    });
+  } catch (error) {
+    console.error('No se pudo consultar el detalle en FastAPI:', error);
+    return NextResponse.json({ detail: 'Backend de Kuska no disponible' }, { status: 503 });
+  }
+}
