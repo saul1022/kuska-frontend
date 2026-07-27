@@ -48,11 +48,16 @@ export default function ReportCard({ report, onPress, onRetry }) {
             >
               {report.title}
             </Text>
-            <StatusBadge status={report.status} />
+            <StatusBadge status={report.displayStatus} />
           </View>
           <Text style={[typography.bodyMd, styles.description]} numberOfLines={2}>
             {report.description}
           </Text>
+          {report.priority || report.incidentType ? (
+            <Text style={[typography.labelStatus, styles.analysis]} numberOfLines={1}>
+              {[report.priority?.toUpperCase(), report.incidentType].filter(Boolean).join(' · ')}
+            </Text>
+          ) : null}
         </View>
 
         <View style={[styles.footer, isError && styles.footerError]}>
@@ -152,6 +157,7 @@ const styles = StyleSheet.create({
   description: {
     color: colors.onSurfaceVariant,
   },
+  analysis: { color: colors.primary, fontSize: 11, marginTop: 6 },
   footer: {
     flexDirection: 'row',
     justifyContent: 'space-between',

@@ -1,4 +1,4 @@
-// Cambiar esta URL apenas el equipo de backend deploye (ver FRONTEND.md).
-// Mientras tanto MOCK_API=true hace que el cliente simule las respuestas.
-export const API_BASE_URL = 'https://TODO-backend-url.example.com';
-export const MOCK_API = true;
+export const API_BASE_URL =
+  process.env.EXPO_PUBLIC_API_URL ?? 'http://127.0.0.1:8000';
+
+export const MOCK_API = process.env.EXPO_PUBLIC_MOCK_API !== 'false';

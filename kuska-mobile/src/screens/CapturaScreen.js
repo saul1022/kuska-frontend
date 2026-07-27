@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
 import { colors, typography, spacing, radius } from '../theme';
 import PrimaryButton from '../components/PrimaryButton';
 import CameraCaptureModal from '../components/CameraCaptureModal';
@@ -20,22 +21,47 @@ export default function CapturaScreen({ navigation, onSubmit }) {
   const [photoUri, setPhotoUri] = useState(null);
   const [videoUri, setVideoUri] = useState(null);
   const [captureMode, setCaptureMode] = useState(null); // 'photo' | 'video' | null
+  const [isSaving, setIsSaving] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
 
   const location = useLocationCapture();
 
-  const canSubmit = Boolean(photoUri);
+  const canSubmit = Boolean(photoUri && description.trim().length >= 10 && location.coords && !isSaving);
 
-  function handleSubmit() {
-    onSubmit({
-      description,
-      photoUri,
-      videoUri,
-      location: location.coords,
+  // Alternativa a la camara: elegir evidencia ya guardada en el telefono.
+  // Util cuando el ciudadano fotografio el danio antes de instalar la app.
+  async function handlePickFromGallery() {
+    setSubmitError(null);
+    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permission.granted) {
+      setSubmitError('Necesitamos acceso a tus fotos para adjuntar una imagen.');
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      quality: 0.7,
     });
-    setDescription('');
-    setPhotoUri(null);
-    setVideoUri(null);
-    navigation.navigate('ReporteGuardado');
+
+    if (!result.canceled && result.assets?.length) {
+      setPhotoUri(result.assets[0].uri);
+    }
+  }
+
+  async function handleSubmit() {
+    setIsSaving(true);
+    setSubmitError(null);
+    try {
+      const clientId = await onSubmit({ description: description.trim(), photoUri, videoUri, location: location.coords });
+      setDescription('');
+      setPhotoUri(null);
+      setVideoUri(null);
+      navigation.navigate('ReporteGuardado', { clientId });
+    } catch (error) {
+      setSubmitError(error?.message ?? 'No se pudo guardar el reporte.');
+    } finally {
+      setIsSaving(false);
+    }
   }
 
   return (
@@ -90,6 +116,13 @@ export default function CapturaScreen({ navigation, onSubmit }) {
           </Pressable>
         </View>
 
+        <Pressable onPress={handlePickFromGallery} style={styles.galleryButton}>
+          <MaterialCommunityIcons name="image-multiple" size={20} color={colors.primary} />
+          <Text style={[typography.buttonText, styles.galleryLabel]}>
+            {photoUri ? 'Elegir otra imagen de la galería' : 'Subir imagen desde la galería'}
+          </Text>
+        </Pressable>
+
         <View style={{ gap: 8 }}>
           <Text style={[typography.bodyMd, styles.fieldLabel]}>Descripción detallada</Text>
           <TextInput
@@ -101,6 +134,9 @@ export default function CapturaScreen({ navigation, onSubmit }) {
             value={description}
             onChangeText={setDescription}
           />
+          {description.length > 0 && description.trim().length < 10 ? (
+            <Text style={styles.validationText}>Escribe al menos 10 caracteres.</Text>
+          ) : null}
         </View>
 
         <Pressable
@@ -127,8 +163,9 @@ export default function CapturaScreen({ navigation, onSubmit }) {
         </Pressable>
 
         <View style={{ marginTop: 16 }}>
+          {submitError ? <Text style={styles.validationText}>{submitError}</Text> : null}
           <PrimaryButton
-            label="Enviar Reporte"
+            label={isSaving ? 'Guardando…' : 'Enviar Reporte'}
             icon="send"
             onPress={handleSubmit}
             disabled={!canSubmit}
@@ -263,6 +300,19 @@ const styles = StyleSheet.create({
     color: colors.onSurface,
     textAlignVertical: 'top',
   },
+  validationText: { color: colors.statusHighError, fontSize: 13, marginBottom: 8 },
+  galleryButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    paddingVertical: 12,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    borderColor: colors.secondaryContainer,
+    backgroundColor: colors.surfaceContainerLowest,
+  },
+  galleryLabel: { color: colors.primary, fontSize: 14 },
   locationBox: {
     flexDirection: 'row',
     alignItems: 'center',

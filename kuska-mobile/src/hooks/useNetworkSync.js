@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import NetInfo from '@react-native-community/netinfo';
-import { getPendingReports, updateReportStatus } from '../storage/db';
-import { createIncident } from '../api/incidents';
+import { getPendingReports, getReportsWithIncidentId, updateReportStatus } from '../storage/db';
+import { payloadFromRow, refreshIncidentDetail, synchronizeReport } from '../services/reportSync';
 
 /**
  * Escucha la conexión de red y, apenas hay conectividad, intenta subir
@@ -19,21 +19,19 @@ export function useNetworkSync(onChange) {
         const pending = getPendingReports();
         for (const row of pending) {
           try {
-            const result = await createIncident({
-              clientId: row.client_id,
-              description: row.description,
-              lat: row.lat,
-              lon: row.lon,
-              createdAtClient: row.created_at_client,
-              photoUris: row.photo_uri ? [row.photo_uri] : [],
-              videoUri: row.video_uri,
-            });
-            updateReportStatus(row.client_id, 'synced', result.incident_id);
+            await synchronizeReport(payloadFromRow(row), onChange);
           } catch (e) {
             updateReportStatus(row.client_id, 'error', null);
           }
         }
-        if (pending.length > 0) onChange();
+        for (const row of getReportsWithIncidentId()) {
+          try {
+            await refreshIncidentDetail(row.client_id, row.incident_id);
+          } catch (error) {
+            console.warn('No se pudo refrescar el incidente:', error);
+          }
+        }
+        onChange();
       } finally {
         isSyncingRef.current = false;
       }
